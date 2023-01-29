@@ -98,7 +98,7 @@ async def time_callback(callback: types.CallbackQuery):
         ikb2 = InlineKeyboardMarkup(row_width=1)
         ikb2.add(InlineKeyboardButton('назад', callback_data='back'))
         for j in free_time((now+timedelta(days=1)).strftime("%d.%m.%Y")):
-            ikb2.add(InlineKeyboardButton(j, callback_data='237546516'))
+            ikb2.add(InlineKeyboardButton(j, callback_data='237546516251321'))
         await bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id,
                                     text="выберите время или нажмите назад", reply_markup=ikb2)
 

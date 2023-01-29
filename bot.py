@@ -19,7 +19,8 @@ kb.add(b1).insert(b2).add(b3).insert(b4)
 
 ikb = InlineKeyboardMarkup(row_width=1)
 now = date.today()
-days = pd.date_range(now, periods=4, freq="D")
+n=4                                                     # кол-во дней записи
+days = pd.date_range(now, periods=n, freq="D")
 WEEKDAYS = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']
 
 
@@ -81,24 +82,41 @@ async def location_command(message: types.Message):
     await message.delete()
 
 
+
+
+operations={
+
+}
+
 @dp.callback_query_handler()
 async def time_callback(callback: types.CallbackQuery):
-    if callback.data == now.strftime("%d.%m.%Y"):
-        j=0
-        ikb2 = InlineKeyboardMarkup(row_width=1)
-        ikb2.add(InlineKeyboardButton('назад', callback_data='back'))
-        for j in free_time(now.strftime("%d.%m.%Y")):
-            ikb2.add(InlineKeyboardButton(j, callback_data='23'))
-        await bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id,
-                                    text="выберите время или нажмите назад", reply_markup=ikb2)
+    for k in [0,1, 2, 3]:
+
+        if callback.data == (now+timedelta(days=k)).strftime("%d.%m.%Y"):
+            j=0
+            ikb2 = InlineKeyboardMarkup(row_width=1)
+            ikb2.add(InlineKeyboardButton('назад', callback_data='back'))
+            for j in free_time(now.strftime("%d.%m.%Y")):
+                ikb2.add(InlineKeyboardButton(j, callback_data=j))
+            await bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id,
+                                        text="выберите время или нажмите назад", reply_markup=ikb2)
 
 
+        elif callback.data == 'back':
+            await bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id,
+                                    text="выберите дату", reply_markup=ikb)
+
+if __name__ == "__main__":
+    executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
+
+
+'''
     elif callback.data == (now+timedelta(days=1)).strftime("%d.%m.%Y"):
         j = 0
         ikb2 = InlineKeyboardMarkup(row_width=1)
         ikb2.add(InlineKeyboardButton('назад', callback_data='back'))
         for j in free_time((now+timedelta(days=1)).strftime("%d.%m.%Y")):
-            ikb2.add(InlineKeyboardButton(j, callback_data='237546516'))
+            ikb2.add(InlineKeyboardButton(j, callback_data='237546516251321'))
         await bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id,
                                     text="выберите время или нажмите назад", reply_markup=ikb2)
 
@@ -119,9 +137,4 @@ async def time_callback(callback: types.CallbackQuery):
             ikb2.add(InlineKeyboardButton(j, callback_data='23'))
         await bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id,
                                     text="выберите время или нажмите назад", reply_markup=ikb2)
-    elif callback.data == 'back':
-        await bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id,
-                                    text="выберите дату", reply_markup=ikb)
-
-if __name__ == "__main__":
-    executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
+    '''
